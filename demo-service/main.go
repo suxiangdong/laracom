@@ -12,7 +12,7 @@ type S struct {
 }
 
 func (s *S) SayHello(ctx context.Context, req *pb.DemoRequest, rsp *pb.DemoResponse) error {
-	rsp.Text = "hello" + req.Name
+	rsp.Text = "hello " + req.Name
 	return nil
 }
 
