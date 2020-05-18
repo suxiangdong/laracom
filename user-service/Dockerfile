@@ -8,26 +8,24 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk update && apk --no-cache add git
 
-WORKDIR /app/laracom-demo-service
+WORKDIR /app/laracom-user-service
 
 COPY . .
 
 RUN go mod download
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o laracom-demo-service
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o laracom-user-service
 
 FROM alpine:latest
 
+# 更新安装源
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
-RUN apk update && apk --no-cache add bash supervisor ca-certificates
-
-RUN mkdir /app
+# 安装相关软件
+RUN apk update && apk add --no-cache bash ca-certificates
 
 WORKDIR /app
 
-COPY --from=builder /app/laracom-demo-service/laracom-demo-service .
+COPY --from=builder /app/laracom-user-service/laracom-user-service .
 
-#ADD supervisord.conf /etc/supervisord.conf
-
-CMD ["./laracom-demo-service"]
+CMD ['./laracom-user-service']
