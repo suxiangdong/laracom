@@ -24,8 +24,9 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 # 安装相关软件
 RUN apk update && apk add --no-cache bash ca-certificates
 
+RUN mkdir /app
 WORKDIR /app
 
 COPY --from=builder /app/laracom-user-service/laracom-user-service .
 
-CMD ['./laracom-user-service']
+CMD ["./laracom-user-service"]

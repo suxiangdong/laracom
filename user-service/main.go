@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	tokenService "github.com/suxiangdong/laracom/user-service/service"
+
 	"github.com/suxiangdong/laracom/user-service/handler"
 
 	"github.com/micro/go-micro"
@@ -29,13 +31,15 @@ func main() {
 
 	db.AutoMigrate(&pb.User{})
 
-	repo := repository.UserRepository{Db: db}
+	repo := &repository.UserRepository{Db: db}
+
+	token := &tokenService.TokenService{Repo: repo}
 
 	service := micro.NewService(micro.Name("laracom.user.service"), micro.Version("v1"))
 
 	service.Init()
 
-	pb.RegisterUserServiceHandler(service.Server(), &handler.UserService{Repo: repo})
+	pb.RegisterUserServiceHandler(service.Server(), &handler.UserService{Repo: repo, Token: token})
 
 	err = service.Run()
 

@@ -3,6 +3,8 @@ package handler
 import (
 	"context"
 
+	"github.com/suxiangdong/laracom/user-service/service"
+
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/suxiangdong/laracom/user-service/repo"
@@ -11,7 +13,16 @@ import (
 )
 
 type UserService struct {
-	Repo repo.UserRepository
+	Repo  repo.Repository
+	Token service.Authable
+}
+
+func (srv *UserService) Auth(ctx context.Context, req *pb.User, rsp *pb.Token) error {
+	return nil
+}
+
+func (srv *UserService) ValidateToken(ctx context.Context, req *pb.Token, rsp *pb.Token) error {
+	return nil
 }
 
 func (srv *UserService) Create(ctx context.Context, req *pb.User, rsp *pb.Response) error {
@@ -26,6 +37,8 @@ func (srv *UserService) Create(ctx context.Context, req *pb.User, rsp *pb.Respon
 	if err := srv.Repo.Create(req); err != nil {
 		return err
 	}
+
+	rsp.User = req
 
 	return nil
 }

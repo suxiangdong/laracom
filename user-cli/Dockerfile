@@ -1,7 +1,7 @@
-FROM golang:1.12-alpine as builder
+FROM golang:1.14-alpine as builder
 
 ENV GO111MODULE on
-ENV GOPROXY https://goproxy.cn
+ENV GOPROXY https://goproxy.cn,direct
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
@@ -23,7 +23,6 @@ RUN apk update && apk add --no-cache bash ca-certificates
 
 RUN mkdir /app
 WORKDIR /app
-
 COPY --from=builder /app/laracom-user-cli/laracom-user-cli .
 
 ENTRYPOINT ["./laracom-user-cli"]
